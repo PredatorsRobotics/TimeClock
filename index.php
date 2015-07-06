@@ -1,7 +1,9 @@
-<?php ?>
+<?php
+	include_once('config.php');
+?>
 <html>
     <head>
-        <title></title>
+        <title><?php echo $title; ?></title>
         <style type="text/css">
             .error {
                 color: #ff0000;
@@ -33,11 +35,6 @@
             </tr>
         </table>
         <?php 
-        $servername = "127.0.0.1";
-        $username = "villnoweric";
-        $password = "";
-        $database = "timeclock";
-        
         // Create connection
         $conn = mysqli_connect($servername, $username, $password, $database);
         
