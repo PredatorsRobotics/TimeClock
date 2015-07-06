@@ -10,7 +10,7 @@
     </head>
     <body>
         <h2>Robotics Team Sign-In</h2>
-        <p>Looking to check your hours? Click <a href="/logging/getloghours.php">here</a></p>
+        <p>Looking to check your hours? Click <a href="getloghours.php">here</a></p>
         <h3 style="color:#FF0000;">Important: Log hours in 24hr format!<br/>
         Example: 3:00 PM translates to 15:00 and <br/>9:00 AM translates to 09:00</h3>
         <p><span class="error">* required field.</span></p>
@@ -18,15 +18,15 @@
         <table>
             <tr>
                 <td>Name:</td>
-                <td><input type="text" name="name"/><span class="error">* </span></td>
+                <td><input type="text" name="name" required /><span class="error">* </span></td>
             </tr>
             <tr>
                 <td>Time In:</td>
-                <td><input type="text" name="time_in"/><span class="error">* </span></td>
+                <td><input type="text" name="time_in" required /><span class="error">* </span></td>
             </tr>
             <tr></tr>   
                 <td>Time Out:</td>
-                <td><input type="text" name="time_out"/><span class="error">* </span></td>
+                <td><input type="text" name="time_out" required /><span class="error">* </span></td>
             </tr>
             <tr>
                 <td><input type="submit"/></td>
