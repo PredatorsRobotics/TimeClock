@@ -1,12 +1,14 @@
-
+<?php
+	include_once('config.php');
+?>
 <html>
-<head>
-	<title>Robotics Time-Checker</title>
-	<style>
-.error {color: #FF0000;}
-</style>
-</head>
-
+    <head>
+        <title><?php echo $title; ?></title>
+		<style>
+		.error {color: #FF0000;}
+		</style>
+	</head>
+<body>
 <h2>Robotics Hour Checker</h2>
 <p>Looking to log your hours? Click <a href="index.php">here</a></p>
 <p><span class="error">* required field.</span></p>
@@ -20,11 +22,6 @@ Student Name:
 </form>
 
 <?php
-
-$servername = "127.0.0.1";
-$username = "villnoweric";
-$password = "";
-$database = "timeclock";
 
 // Create connection
 $conn = mysqli_connect($servername, $username, $password, $database);
@@ -76,4 +73,5 @@ if(isset($_POST['name']))
 			If there are any errors please contact us!
 			
 			<?php } ?>
+	</body>
 </html>
