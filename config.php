@@ -5,4 +5,4 @@
 	$password = "";
 	$database = "timeclock";
 	
-	$title = "Predators Time Clock";
+	$title = "Predators Time&nbsp;Clock";
