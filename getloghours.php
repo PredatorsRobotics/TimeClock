@@ -1,6 +1,5 @@
 <?php
 	include_once('config.php');
-	$required = 30;
 ?>
 
 <!DOCTYPE html>

@@ -6,3 +6,4 @@
 	$database = "timeclock";
 	
 	$title = "Predators Time&nbsp;Clock";
+	$required = 30; //Hours Required
