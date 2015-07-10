@@ -1,5 +1,6 @@
 <?php
 	include_once('config.php');
+	$required = 30;
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +20,6 @@
 	</head>
 	<body>
 		<div class="container">
-    		<div class="alert alert-danger alert-dismissible" role="alert">Important: Log hours in 24hr format! Example: 3:00 PM translates to 15:00 and 9:00 AM translates to 09:00</div>
     		<form class="form-signin" method="post">
     			
 				<h2>Robotics Hour Checker</h2>
@@ -56,26 +56,42 @@
 							<th width="100">Total Hours</th>
 						</tr>
 		                <?php
+		                $page_total = 0;
 		                $result = mysqli_query($conn,"SELECT * FROM `hours` WHERE `User` = '$name'");
 		
 		                while($row = mysqli_fetch_array($result)) {
-		                 
+		                 	
+		                 	$mysqltime = $row['Date'];
+		                 	$time_in = $row['Time_In']; 
+		                 	$time_out = $row['Time_Out'];
+		                 	
+		                 	$date = strtotime($mysqltime);
+		                 	$total = ( ( strtotime($time_out) - strtotime($time_in) ) / 60 ) / 60;
+		                 	
 		                    echo "<tr>";
-		                    echo "<td>Day</td>";
-		                    echo "<td>Month</td>";
-		                    echo "<td>Year</td>";
-		                    echo "<td>" . $row['Time_In'] . "</td>";
-		                    echo "<td>" . $row['Time_Out'] . "</td>";
-		                    echo "<td> Total! </td>";
+		                    echo "<td>" . date('l', $date) . "</td>";
+		                    echo "<td>" . date('F j', $date) . "</td>";
+		                    echo "<td>" . date('Y', $date) . "</td>";
+		                    echo "<td>" . $time_in . "</td>";
+		                    echo "<td>" . $time_out . "</td>";
+		                    echo "<td>" . $total . "</td>";
+		                    
+		                    $page_total = $page_total + $total;
 		                    
 		                }
+		                
+		                $remaining = $required - $page_total;
+		                
+		                $count1 = $page_total / $required;
+						$count2 = $count1 * 100;
+						$count = number_format($count2, 0);
 		                ?>
 					</table>
 					
 					<br/>
-					Total Hours: <b>2.00</b><br/>
-					Required Hours: <b>100 Hours</b><br/>
-					Hours remaining: <b>98.00</b> (2% complete)<br/>
+					Total Hours: <b><?php echo $page_total; ?></b><br/>
+					Required Hours: <b><?php echo $required; ?> Hours</b><br/>
+					Hours remaining: <b><?php echo $remaining; ?></b></b> (<?php echo $count; ?>% complete)<br/>
 					If there are any errors please contact us!
 					
 			<?php } ?>
