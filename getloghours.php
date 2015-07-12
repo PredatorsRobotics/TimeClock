@@ -66,6 +66,7 @@
 		                 	
 		                 	$date = strtotime($mysqltime);
 		                 	$total = ( ( strtotime($time_out) - strtotime($time_in) ) / 60 ) / 60;
+		                 	$rounded_total = number_format($total, 2);
 		                 	
 		                    echo "<tr>";
 		                    echo "<td>" . date('l', $date) . "</td>";
@@ -73,24 +74,44 @@
 		                    echo "<td>" . date('Y', $date) . "</td>";
 		                    echo "<td>" . $time_in . "</td>";
 		                    echo "<td>" . $time_out . "</td>";
-		                    echo "<td>" . $total . "</td>";
+		                    echo "<td>" . $rounded_total . "</td>";
 		                    
 		                    $page_total = $page_total + $total;
 		                    
 		                }
 		                
-		                $remaining = $required - $page_total;
+		                $rem_comp = $req_comp - $page_total;
+		                $rem_letter = $req_letter - $page_total;
 		                
-		                $count1 = $page_total / $required;
-						$count2 = $count1 * 100;
-						$count = number_format($count2, 0);
+		                $per_comp1 = $page_total / $req_comp;
+						$per_comp2 = $per_comp1 * 100;
+						$per_comp = number_format($per_comp2, 0);
+						
+						$per_letter1 = $page_total / $req_letter;
+						$per_letter2 = $per_letter1 * 100;
+						$per_letter = number_format($per_letter2, 0);
+						
 		                ?>
 					</table>
 					
 					<br/>
 					Total Hours: <b><?php echo $page_total; ?></b><br/>
-					Required Hours: <b><?php echo $required; ?> Hours</b><br/>
-					Hours remaining: <b><?php echo $remaining; ?></b></b> (<?php echo $count; ?>% complete)<br/>
+					
+					Required Hours: <b><?php echo $req_comp; ?> Hours</b><br/>
+					Hours until you can go to Competition: <b><?php echo $req_comp; ?> Hours</b>
+					<div class="progress">
+					  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <?php if($per_comp >= 100){echo 100;}else{ echo $per_comp;} ?>%;">
+					    <?php if($per_comp >= 100){echo $req_comp . " Hours";}else{echo $page_total . " Hours";} ?>
+					  </div>
+					  <center><?php if($per_comp <= 100){echo $rem_comp . " Hours";} ?></center>
+					</div>
+					Hours until you Letter: <b><?php echo $req_letter; ?> Hours</b>
+					<div class="progress">
+					  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <?php if($per_letter >= 100){echo 100;}else{ echo $per_letter;} ?>%;">
+					    <?php if($per_letter >= 100){echo $req_letter . " Hours";}else{echo $page_total . " Hours";} ?>
+					  </div>
+					  <center><?php if($per_letter <= 100){echo $rem_letter . " Hours";} ?></center>
+					</div>
 					If there are any errors please contact us!
 					
 			<?php } ?>

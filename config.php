@@ -6,4 +6,5 @@
 	$database = "timeclock";
 	
 	$title = "Predators Time&nbsp;Clock";
-	$required = 30; //Hours Required
+	$req_comp = 30; //Hours required for competition
+	$req_letter = 60; //Hours required to letter
