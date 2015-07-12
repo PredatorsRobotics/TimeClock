@@ -56,7 +56,7 @@
 						</tr>
 		                <?php
 		                $page_total = 0;
-		                $result = mysqli_query($conn,"SELECT * FROM `hours` WHERE `User` = '$name'");
+		                $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE `User` = '$name'");
 		
 		                while($row = mysqli_fetch_array($result)) {
 		                 	

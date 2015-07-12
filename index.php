@@ -57,7 +57,7 @@ if(isset($_POST['name'])) {
     $time_out = $_POST['time_out'];
     $date = date('Y-m-d');
     
-    $sql = "INSERT INTO `hours` (`User`, `Date`, `Time_In`, `Time_Out`) VALUES ('" . $name . "', '" . $date . "', '" . $time_in . "', '" . $time_out . "')";
+    $sql = "INSERT INTO `$data_table` (`User`, `Date`, `Time_In`, `Time_Out`) VALUES ('" . $name . "', '" . $date . "', '" . $time_in . "', '" . $time_out . "')";
     
     $conn->query($sql);
     
