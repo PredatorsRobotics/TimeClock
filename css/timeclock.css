@@ -1,8 +1,8 @@
-
 body {
   padding-top: 40px;
   padding-bottom: 40px;
-  background-color: #eee;
+  
+  background: #eee url(https://www.messenger.com/ajax/mercury/attachments/photo.php?fbid=729298743865108&height=206&mode=cover) no-repeat center center fixed; 
 }
 
 .form-signin {
@@ -34,13 +34,13 @@ body {
 .form-signin .form-control:focus {
   z-index: 2;
 }
-.form-signin-top {
+.form-control-top {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin-mid {
+.form-control-mid {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -48,7 +48,7 @@ body {
   border-top-right-radius: 0;
 }
 
-.form-signin-bottom {
+.form-control-bottom {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
