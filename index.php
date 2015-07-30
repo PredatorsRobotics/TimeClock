@@ -26,7 +26,7 @@
         }
         
         if(isset($_POST['name'])) {
-            $name = $_POST['name'];
+            $name = $_POST['name']; // Have a problem with my beautiful PHP? Why, did I change something? no you just were clicking through it very thuroghly.
             $clock = $_POST['clock'];
             $time = date('Y-m-d H:i:s');
             
@@ -47,8 +47,12 @@
       <form class="form-signin" method="post">
         <h2 class="form-signin-heading"><?php echo $title; ?></h2>
         <div class="btn-group btn-group-justified" style="width:100%;">
-          <a type="button" class="btn btn-default" href="getloghours.php">Check Hours</a>
-          <a type="button" class="btn btn-default" href="manualhours.php">Manual Entry</a>
+          <a class="btn btn-default active" href="index.php">Clock In/Out</a>
+          <a class="btn btn-default" href="manualhours.php">Manual Entry</a>
+        </div>
+        <div class="btn-group btn-group-justified" style="width:100%;">
+          <a class="btn btn-default" href="getloghours.php">Check Hours</a>
+          <a class="btn btn-default" href="getloghours.php">Leaderboard</a>
         </div>
         <br>
         <input type="text" name="name" id="inputName" class=" form-control form-control-top" placeholder="Username" required autofocus>
@@ -57,8 +61,8 @@
       </form>
     </div>
  
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	<script src="/timeclock.js"></script>
+	<script src="js/timeclock.js"></script>
   </body>
 </html>

@@ -55,7 +55,7 @@ if(isset($_POST['timezone'])){
 <html>
   <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-<link rel="stylesheet" href="../css/timeclock.css"
+<link rel="stylesheet" href="../css/dashboard.css"
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title><?php echo $title; ?></title>
   </head>
@@ -70,12 +70,13 @@ if(isset($_POST['timezone'])){
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Dash</a>
+          <a class="navbar-brand" href="#"><?php echo $title; ?></a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="../">Display</a></li>
-            <li><a href="index.php">Matches</a></li>
+            <li><a href="../">Home</a></li>
+            <li><a href="index.php">Dashboard</a></li>
+            <li class="active"><a href="settings.php">Settings</a></li>
           </ul>
         </div>
       </div>
@@ -149,7 +150,7 @@ if(isset($_POST['timezone'])){
                 </form>
               </table>
             </div>
-          </h1>
+          Version 0.1.8
         </div>
       </div>
     </div>

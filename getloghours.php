@@ -24,6 +24,7 @@
 				<div class="btn-group btn-group-justified" style="width:100%;">
 					<a type="button" class="btn btn-default" href="index.php">Clock In/Out</a>
 					<a type="button" class="btn btn-default" href="manualhours.php">Manual Entry</a>
+					<a type="button" class="btn btn-default active" href="getloghours.php">Check Hours</a>
 		        </div>
 		        <br>
 				<input type="text" name="name" id="inputTimeIn" class="form-control" placeholder="Name" <?php if(isset($_POST['name'])){echo 'value="' . $_POST['name'] . '"';} ?> required>
