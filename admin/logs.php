@@ -14,15 +14,17 @@
 
     <title><?php echo $title; ?></title>
     
-  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+  	<link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
 
     <link href="../css/dashboard.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script>
     $(document).ready(function(){
-        $("#add").click(function(){
-            $("#add_button").hide(200, function(){
-              $("#add_user").show(200); 
+        $("#pending").click(function(){
+            $("#pending").hide(200, function(){
+              $("#approved").show(200);
+              $("#denied").show(200);
             });
         });
     });
@@ -63,7 +65,7 @@
           <ul class="nav nav-sidebar">
             <li><a href="index.php">Overview <span class="sr-only">(current)</span></a></li>
             <li><a href="users.php">Users</a></li>
-            <li><a href="analytics.php">Analytics</a></li>
+            <li class="active"><a href="logs.php">Reports</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -83,15 +85,17 @@
               </thead>
               <tbody>
                 <?php
-                  if(isset($_GET['n'])){
                     switch ($_GET['n']) {
                         case 'date':
                             $value = $_GET['v'];
-                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE DATE(Time_In) = '$value'");
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE DATE(Time_In) = '$value' ORDER BY Time_In DESC");
                             break;
                         case 'name':
                             $value = $_GET['v'];
-                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$value'");
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$value' ORDER BY Time_In DESC");
+                            break;
+                        default:
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` ORDER BY Time_In DESC");
                             break;
                     }
                     while($row = mysqli_fetch_array($result)) {
@@ -100,7 +104,7 @@
                       
                       switch ($row['Status']) {
                           case 0:
-                              $status = '<span class="label label-warning">Pending</span>';
+                              $status = '<a id="pending" class="label label-warning">Pending</a><a style="display:none;" href="action.php?s=2&id=' . $row['ID'] . '&n=' . $_GET['n'] . '&v=' . $_GET['v'] . '" id="denied" class="label label-danger">Denied</a> <a style="display:none;" href="action.php?s=1&id=' . $row['ID'] . '&n=' . $_GET['n'] . '&v=' . $_GET['v'] . '" id="approved" class="label label-success">Approved</a>';
                               break;
                           case 1:
                               $status = '<span class="label label-success">Approved</span>';
@@ -119,7 +123,7 @@
                       echo "<td>" . $status . "</td>";
                       echo "</tr>";
                     }
-                  }
+                  
                 ?>
               </tbody>
             </table>

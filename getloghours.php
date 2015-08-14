@@ -9,7 +9,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title><?php echo $title; ?></title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+		<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
 		<link rel="stylesheet" href="css/timeclock.css" >
 		<style type="text/css">
 		    .error {
@@ -18,14 +19,29 @@
 		</style>
 	</head>
 	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+	      <div class="container">
+	        <div class="navbar-header">
+	          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	            <span class="sr-only">Toggle navigation</span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </button>
+	        </div>
+	        <div id="navbar" class="collapse navbar-collapse">
+	          <ul class="nav navbar-nav navbar-right">
+	            <li><a href="index.php">Clock In/Out</a></li>
+	            <li><a href="manualhours.php">Manual Entry</a></li>
+	            <li class="active"><a href="getloghours.php">Check Hours</a></li>
+	            <li><a href="leaderboard.php">Leaderboard</a></li>
+	          </ul>
+	        </div><!--/.nav-collapse -->
+	      </div>
+	    </nav>
 		<div class="container">
     		<form class="form-signin" method="post">
 				<h2 class="form-signin-heading"><?php echo $title; ?></h2>
-				<div class="btn-group btn-group-justified" style="width:100%;">
-					<a type="button" class="btn btn-default" href="index.php">Clock In/Out</a>
-					<a type="button" class="btn btn-default" href="manualhours.php">Manual Entry</a>
-					<a type="button" class="btn btn-default active" href="getloghours.php">Check Hours</a>
-		        </div>
 		        <br>
 				<input type="text" name="name" id="inputTimeIn" class="form-control" placeholder="Name" <?php if(isset($_POST['name'])){echo 'value="' . $_POST['name'] . '"';} ?> required>
 				<br />
@@ -60,7 +76,7 @@
 						</tr>
 		                <?php
 		                $page_total = 0;
-		                $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE `User` = '$name' AND `Time_Out` IS NOT NULL");
+		                $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE `User` = '$name' AND `Time_Out` IS NOT NULL AND Status=1");
 		
 		                while($row = mysqli_fetch_array($result)) {
 		                 	

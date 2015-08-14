@@ -2,7 +2,9 @@ body {
   padding-top: 40px;
   padding-bottom: 40px;
   
-  background: #eee url(https://www.messenger.com/ajax/mercury/attachments/photo.php?fbid=729298743865108&height=206&mode=cover) no-repeat center center fixed; 
+  background: #eee;
+  
+  /*background: #eee url(https://www.messenger.com/ajax/mercury/attachments/photo.php?fbid=729298743865108&height=206&mode=cover) no-repeat center center fixed; */
 }
 
 .form-signin {

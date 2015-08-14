@@ -54,7 +54,8 @@ if(isset($_POST['timezone'])){
 ?>
 <html>
   <head>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+<link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
 <link rel="stylesheet" href="../css/dashboard.css"
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title><?php echo $title; ?></title>

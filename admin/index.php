@@ -14,7 +14,8 @@
 
     <title><?php echo $title; ?></title>
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+	<link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
 
     <link href="../css/dashboard.css" rel="stylesheet">
 
@@ -38,7 +39,6 @@
             <li><a href="../">Home</a></li>
             <li class="active"><a href="index.php">Dashboard</a></li>
             <li><a href="settings.php">Settings</a></li>
-            <li><a href="logs.php">Logs</a></li>
           </ul>
         </div>
       </div>
@@ -50,7 +50,7 @@
           <ul class="nav nav-sidebar">
             <li class="active"><a href="index.php">Overview <span class="sr-only">(current)</span></a></li>
             <li><a href="users.php">Users</a></li>
-            <li><a href="analytics.php">Analytics</a></li>
+            <li><a href="logs.php">Reports</a></li>
           </ul>
         </div>
         <?php
@@ -61,31 +61,41 @@
         ?>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 class="page-header">Dashboard</h1>
-          <table class="table">
+          <h2 class="sub-header">Students Clocked In</h2>
+          <table class="table table-striped">
+            <thead>
               <tr>
-                  <td>Students Enrolled</td>
-                  <td>
-                      <div class="progress">
-            			  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-            			  <?php echo $user_num; ?>
-            			  </div>
-            			  <center></center>
-                    </div>
-                  </td>
+                <th>Name</th>
+                <th>Duration</th>
               </tr>
+            </thead>
+            <tbody>
+              <?php
+              $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE `Time_Out` IS NULL");
+    		
+              while($row = mysqli_fetch_array($result)) {
+                $Time_In = $row['Time_In'];
+                $current_time = date('Y-m-d H:i:s');
+                $minutes = (strtotime($current_time) - strtotime($Time_In)) /60;
+                $round_minutes =  number_format($minutes, 1);
+                if($minutes < 60){
+                  $duration = $round_minutes;
+                  $label = "Minutes";
+                }else{
+                  $hours = $minutes /60;
+                  $round_hours =  number_format($hours, 1);
+                  $duration = $round_hours;
+                  $label = "Hours";
+                }
+                echo "<tr>";
+                echo "<td>" . $row['User'] . "</td>";
+                echo "<td>" . $duration . " " . $label . "</td>";
+                echo "</tr>";
+              }
+              ?>
+            </tbody>
           </table>
-          <div class="row placeholders">
-            <span class="progress-label">Students Lettered:</span>
-            
-			<div class="progress">
-			  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-			  0
-			  </div>
-			  <center>1</center>
-			</div>
-          </div>
-
-          <h2 class="sub-header">Recent Logs (TODO:find better word)</h2>
+          <h2 class="sub-header">Recent Actions</h2>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
