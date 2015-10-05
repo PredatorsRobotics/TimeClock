@@ -17,8 +17,18 @@ switch ($_POST['function']) {
         $value = mysqli_num_rows($result);
         echo $value;
         break;
-    case 1:
-        echo "i equals 1";
+    case 'getIsManual':
+        $username = $_POST['username'];
+        
+        $user_var = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$username' OR `username`='$username'");
+        $value = mysqli_num_rows($user_var);
+        if($value==0){
+            die("-1");
+        }
+        
+        $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$username' AND Time_Out IS NULL");
+        $value = mysqli_num_rows($result);
+        echo $value;
         break;
     case 2:
         echo "i equals 2";

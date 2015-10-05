@@ -13,5 +13,4 @@
 	$title = "Predators Time Clock";
 	$req_comp = 30; //Hours required for competition
 	$req_letter = 60; //Hours required to letter
-	date_default_timezone_set($timezone); // A bit of ignorable code to make the above work
 ?>

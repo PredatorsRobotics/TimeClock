@@ -1,6 +1,11 @@
 <?php
 	include_once('../config.php');
 	$conn = mysqli_connect($servername, $username, $password, $database);
+		session_start();
+	
+	if($_SESSION['ADMIN'] !== 1){
+	  header('location: login.php');
+	}
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +24,7 @@
 
     <link href="../css/dashboard.css" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script>
     $(document).ready(function(){
         $("#pending").click(function(){
@@ -27,11 +33,19 @@
               $("#denied").show(200);
             });
         });
+        
+        $("#generate").click(function(){
+            $("#generate").addClass("active");
+            $("#gen_div").show(200);
+        });
     });
     </script>
     <style>
       #add_user{
         display: none;
+      }
+      #gen_div{
+        display:none;
       }
     </style>
   </head>
@@ -50,10 +64,14 @@
           <a class="navbar-brand" href="#"><?php echo $title; ?></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li id="generate"><a>Generate Report</a></li>
+          </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="../">Home</a></li>
             <li class="active"><a href="index.php">Dashboard</a></li>
             <li><a href="settings.php">Settings</a></li>
+            <li><a href="login.php?logout=1">Log Out</a></li>
           </ul>
         </div>
       </div>
@@ -69,7 +87,15 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
+          <div id="gen_div">
+            <h2 class="sub-header">Generate Report</h2>
+            <h3>Name</h3>
+            <form class="form-inline" action="logs.php" method="get"><input type="hidden" name="n" value="name"><input class="form-control" type="text" name="v" placeholder="Name"></input> <input type="submit" class="btn btn-default"></form>
+            <h3>Date</h3>
+            <form class="form-inline" action="logs.php" method="get"><input type="hidden" name="n" value="date"><input class="form-control" type="text" name="v" placeholder="Date"></input> <input type="submit" class="btn btn-default"></form>
+            <h3>Status</h3>
+            <a class="btn btn-warning" href="logs.php?n=status&v=0">Pending</a> <a class="btn btn-danger" href="logs.php?n=status&v=2">Denied</a> <a class="btn btn-success" href="logs.php?n=status&v=1">Approved</a>
+          </div>
           <h2 class="sub-header">Logs</h2>
           <div class="table-responsive">
             <table class="table table-striped">
@@ -81,6 +107,7 @@
                   <th>Time In</th>
                   <th>Time Out</th>
                   <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -88,14 +115,22 @@
                     switch ($_GET['n']) {
                         case 'date':
                             $value = $_GET['v'];
-                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE DATE(Time_In) = '$value' ORDER BY Time_In DESC");
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE DATE(Time_In) = '$value' ORDER BY ID DESC");
                             break;
                         case 'name':
                             $value = $_GET['v'];
-                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$value' ORDER BY Time_In DESC");
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$value' ORDER BY ID DESC");
+                            break;
+                        case 'status':
+                            $value = $_GET['v'];
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE Status='$value' ORDER BY ID DESC");
+                            break;
+                        case 'id':
+                            $value = $_GET['v'];
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE ID='$value' ORDER BY ID DESC");
                             break;
                         default:
-                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` ORDER BY Time_In DESC");
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` ORDER BY ID DESC");
                             break;
                     }
                     while($row = mysqli_fetch_array($result)) {
@@ -121,6 +156,8 @@
                       echo "<td>" . date("g:i A", strtotime($time_in)) . "</td>";
                       echo "<td>" . date("g:i A", strtotime($time_out)) . "</td>";
                       echo "<td>" . $status . "</td>";
+                      $delete = '<td><a href="action.php?dh=1&id=' . $row['ID'] . '&n=' . $_GET['n'] . '&v=' . $_GET['v'] . '" id="denied" class="label label-danger">Delete</a></td>';
+                      echo $delete;
                       echo "</tr>";
                     }
                   

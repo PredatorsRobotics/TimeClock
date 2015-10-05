@@ -1,6 +1,12 @@
 <?php
 	include_once('../config.php');
 	$conn = mysqli_connect($servername, $username, $password, $database);
+	
+		session_start();
+	
+	if($_SESSION['ADMIN'] !== 1){
+	  header('location: login.php');
+	}
 ?>
 
 <!DOCTYPE html>
@@ -53,6 +59,11 @@
             <li><a href="../">Home</a></li>
             <li class="active"><a href="index.php">Dashboard</a></li>
             <li><a href="settings.php">Settings</a></li>
+            <li><a href="login.php?logout=1">Log Out</a></li>
+            <hr class="visible-xs">
+            <li class="visible-xs"><a href="index.php">Overview</a></li>
+            <li class="visible-xs active"><a href="users.php">Users</a></li>
+            <li class="visible-xs"><a href="logs.php">Reports</a></li>
           </ul>
         </div>
       </div>
@@ -68,7 +79,7 @@
           </ul>
         </div>
         <?php
-        $result = mysqli_query($conn,"SELECT * FROM `users`");
+        $result = mysqli_query($conn,"SELECT * FROM `$user_table`");
         $user_num = mysqli_num_rows($result);
         
         
@@ -90,25 +101,38 @@
               </thead>
               <tbody>
               <?php
-              $result = mysqli_query($conn,"SELECT * FROM `users` ORDER BY ID ASC");
+              $result = mysqli_query($conn,"SELECT * FROM `$user_table` ORDER BY ID ASC");
 		
                 while($row = mysqli_fetch_array($result)) {
                     $loop_total = 0;
                     $user = $row['Name'];
-                    $result2 = mysqli_query($conn,"SELECT * FROM `hours` WHERE `User`='$user' AND `Time_Out` IS NOT NULL");
+                    $result2 = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE `User`='$user' AND `Time_Out` IS NOT NULL AND Status=1");
                     while($row2 = mysqli_fetch_array($result2)){
                       $time_in = $row2['Time_In'];
-		                 	$time_out = $row2['Time_Out'];
+                      $time_out = $row2['Time_Out'];
                       $total = ( ( strtotime($time_out) - strtotime($time_in) ) / 60 ) / 60;
                       $loop_total = $loop_total + $total;
                     }
                     $loop_total = number_format($loop_total, 1);
                     $id = $row['ID'];
+                    
+                    $result_adc = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$user' AND pin IS NULL");
+                    
+                    $isnull = mysqli_num_rows($result_adc);
+                    
+                    if($isnull==1){
+                      //TRUE
+                      $PIN = "User Has No PIN";
+                    }else{
+                      //FALSE
+                      $PIN = "****";
+                    }
+                    
                     echo "<tr>";
                     echo "<td>" . $id . "</td>";
                     echo '<td><a href="logs.php?n=name&v=' . $user . '">' . $user . '</a></td>';
                 	echo "<td>" . $row['username'] . "</td>";
-                    echo "<td>****</td>";
+                    echo "<td>" . $PIN . "</td>";
                     echo "<td>" . $loop_total . "</td>";
                     if($row['admin'] == 1)
                     {
@@ -116,7 +140,7 @@
                     }else{
                         $admin = '';
                     }
-                    echo '<td> <a class="label label-warning">Edit</a> <a href="action.php?d=' . $id . '" class="label label-danger">Delete</a> ' . $admin . "</td>";
+                    echo '<td> <a href="action.php?password=' . $id . '" class="label label-warning">Reset PIN</a> <a href="action.php?d=' . $id . '" class="label label-danger">Delete</a> ' . $admin . "</td>";
                     echo "</tr>";
                 }
                 ?>
@@ -128,7 +152,7 @@
                       <td></td>
                       <td><input type="text" name="Name"></td>
                       <td><input type="text" name="Username"></td>
-                      <td><input type="tel" name="PIN" id="inputPassword" style="-webkit-text-security: disc;" maxlength="4" autocomplete="off"></td>
+                      <td>User Will Create PIN on First Clock</td>
                       <td></td>
                       <td><button type="submit" class="label label-success">Add</button></td>
                     </form>
@@ -139,5 +163,7 @@
         </div>
       </div>
     </div>
+    		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>	
   </body>
 </html>

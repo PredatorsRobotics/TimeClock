@@ -1,4 +1,9 @@
 <?php
+	session_start();
+	
+	if($_SESSION['ADMIN'] !== 1){
+	  header('location: login.php');
+	}
 
 if(isset($_POST['timezone'])){
   
@@ -56,8 +61,9 @@ if(isset($_POST['timezone'])){
   <head>
 <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
 <link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
-<link rel="stylesheet" href="../css/dashboard.css"
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="../css/dashboard.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo $title; ?></title>
   </head>
   <body>
@@ -78,6 +84,7 @@ if(isset($_POST['timezone'])){
             <li><a href="../">Home</a></li>
             <li><a href="index.php">Dashboard</a></li>
             <li class="active"><a href="settings.php">Settings</a></li>
+            <li><a href="login.php?logout=1">Log Out</a></li>
           </ul>
         </div>
       </div>
@@ -155,5 +162,7 @@ if(isset($_POST['timezone'])){
         </div>
       </div>
     </div>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   </body>
 </html>

@@ -17,8 +17,7 @@ if(isset($_GET['d'])){
 if(isset($_POST['Name'])){
     $Name = $_POST['Name'];
     $Username = $_POST['Username'];
-    $PIN = $_POST['PIN'];
-    $sql = "INSERT INTO `$user_table` (username, Name, pin) VALUES ('$Username', '$Name', '$PIN')";
+    $sql = "INSERT INTO `$user_table` (username, Name) VALUES ('$Username', '$Name')";
     $conn->query($sql);
     header('Location: users.php');
     die;
@@ -35,4 +34,34 @@ if(isset($_GET['s'])){
     header('Location: logs.php?n=' . $n . '&v=' . $v);
     die;
 }
+
+//DELETE HOURS
+if(isset($_GET['dh'])){
+    $hours = $_GET['id'];
+    $n = $_GET['n'];
+    $v = $_GET['v'];
+    $sql = "DELETE FROM `$data_table` WHERE `ID` ='$hours'";
+    $conn->query($sql);
+    header('Location: logs.php?n=' . $n . '&v=' . $v);
+    die;
+}
+
+//CLOCK OUT ALL USERS
+if(isset($_GET['clockout'])){
+    $time = date('Y-m-d H:i:s');
+    $sql = "UPDATE `$data_table` SET Time_Out='$time' WHERE Time_Out IS NULL";
+    $conn->query($sql);
+    header('Location: index.php');
+    die;
+}
+
+//RESETS PASSWORD
+if(isset($_GET['password'])){
+    $password = $_GET['password'];
+    $sql = "UPDATE `$user_table` SET pin = NULL WHERE ID='$password'";
+    $conn->query($sql);
+    header('Location: users.php');
+    die;
+}
+
 ?>

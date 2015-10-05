@@ -15,6 +15,7 @@
 	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
 	<link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
 	<link rel="stylesheet" href="css/timeclock.css" >
+	<link rel="manifest" href="manifest.json">
   </head>
   <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -52,21 +53,36 @@
         if(isset($_POST['name'])) {
             $name = $_POST['name']; // Have a problem with my beautiful PHP? Why, did I change something? no you just were clicking through it very thuroghly.
             $clock = $_POST['clock'];
-            $PIN = $_POST['pin'];
+            $UNHASHED_PIN = $_POST['pin'];
             $time = date('Y-m-d H:i:s');
+            $PIN = md5($UNHASHED_PIN);
             
             if(empty($_POST['pin'])){
               echo '<div class="alert alert-danger" role="alert">Please Provide a PIN!</div>';
             }else{
-              $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name'");
-    		
-              while($row = mysqli_fetch_array($result)) {
-                $server_pin = $row['pin'];
+              
+              $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name' AND pin IS NULL");
+              
+              $isnull = mysqli_num_rows($result);
+              
+              if($isnull == 0){
+                
+                $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name'");
+      		
+                while($row = mysqli_fetch_array($result)) {
+                  $server_pin = $row['pin'];
+                }
+              
+                if($PIN !== $server_pin){
+                  echo '<div class="alert alert-danger" role="alert">Incorrect Pin</div>';
+                }
+              }else{
+                $sql = "UPDATE `$user_table` SET pin='$PIN' WHERE `Name`='$name'";
+                $conn->query($sql);
+                $server_pin = $PIN;
               }
               
-              if($PIN !== $server_pin){
-                echo '<div class="alert alert-danger" role="alert">Incorrect Pin</div>';
-              }else{
+              if($PIN == $server_pin){
                 
                 if($clock=='in'){
                   $sql = "INSERT INTO `$data_table` (`User`, `Time_In`) VALUES ('" . $name . "', '" . $time . "')";
@@ -100,6 +116,16 @@
         <div id="clockInOut"></div>
       </form>
     </div>
+    
+    <footer class="footer" style="position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #f5f5f5;">
+      <div class="container">
+        <p class="text-muted">&copy; <?php echo date('Y'); ?></p>
+      </div>
+    </footer>
  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
