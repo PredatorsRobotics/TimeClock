@@ -61,23 +61,24 @@
               echo '<div class="alert alert-danger" role="alert">Please Provide a PIN!</div>';
             }else{
               
-              $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name' AND pin IS NULL");
+              $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name' OR `username`='$name' AND pin IS NULL");
               
               $isnull = mysqli_num_rows($result);
               
               if($isnull == 0){
                 
-                $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name'");
+                $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name' OR `username`='$name'");
       		
                 while($row = mysqli_fetch_array($result)) {
                   $server_pin = $row['pin'];
+                  $user_id = $row['ID'];
                 }
               
                 if($PIN !== $server_pin){
                   echo '<div class="alert alert-danger" role="alert">Incorrect Pin</div>';
                 }
               }else{
-                $sql = "UPDATE `$user_table` SET pin='$PIN' WHERE `Name`='$name'";
+                $sql = "UPDATE `$user_table` SET pin='$PIN' WHERE `Name`='$name' OR `username`='$name'";
                 $conn->query($sql);
                 $server_pin = $PIN;
               }
@@ -85,10 +86,10 @@
               if($PIN == $server_pin){
                 
                 if($clock=='in'){
-                  $sql = "INSERT INTO `$data_table` (`User`, `Time_In`) VALUES ('" . $name . "', '" . $time . "')";
+                  $sql = "INSERT INTO `$data_table` (`User`, `Time_In`) VALUES ('" . $user_id . "', '" . $time . "')";
                   $conn->query($sql);
                 }elseif($clock=='out'){
-                  $sql = "UPDATE `$data_table` SET Time_Out='$time' WHERE Time_Out IS NULL AND User='$name'";
+                  $sql = "UPDATE `$data_table` SET Time_Out='$time' WHERE Time_Out IS NULL AND User='$user_id'";
                   $conn->query($sql);
                 }
             
@@ -112,20 +113,10 @@
         </div>-->
         <br>
         <input type="text" name="name" id="inputName" class=" form-control form-control-top" placeholder="Username" required autofocus>
-        <input type="tel" name="pin" id="inputPassword" class="form-control form-control-bottom" placeholder="PIN" style="-webkit-text-security: disc;" maxlength="4">
+        <input type="tel" name="pin" id="inputPassword" class="form-control form-control-bottom" placeholder="PIN" style="-webkit-text-security: disc;" autocomplete="off" autocorrect="off">
         <div id="clockInOut"></div>
       </form>
     </div>
-    
-    <footer class="footer" style="position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 60px;
-  background-color: #f5f5f5;">
-      <div class="container">
-        <p class="text-muted">&copy; <?php echo date('Y'); ?></p>
-      </div>
-    </footer>
  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>

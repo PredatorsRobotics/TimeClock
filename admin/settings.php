@@ -27,6 +27,10 @@ if(isset($_POST['timezone'])){
   
   $req_letter = $_POST['req_letter'];
   
+  $build_start = $_POST['build_start'];
+  
+  $build_end = $_POST['build_end'];
+  
   $config = '<?php
 	$timezone = "' . $timezone . '";
 
@@ -38,6 +42,9 @@ if(isset($_POST['timezone'])){
 	
 	$user_table = "' . $user_table . '";
 	$data_table = "' . $data_table . '";
+	
+	$build_start = "' . $build_start . '";
+	$build_end = "' . $build_end . '";
 	
 	$title = "' . $title . '";
 	$req_comp = ' . $req_comp . '; //Hours required for competition
@@ -93,7 +100,7 @@ if(isset($_POST['timezone'])){
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-12 col-md-12 main">
-          <h1 class="page-header">Settings</h1>
+          <h1 class="page-header"><b>Settings</b> | <a href="update.php">Updates</a></h1>
 		        <div class="table-responsive">
               <table class="table table-striped">
 		    	      <thead>
@@ -154,11 +161,21 @@ if(isset($_POST['timezone'])){
                         <td><input type="text" name="data_table" value="<?php echo $data_table; ?>"></td>
                         <td><input type="submit" class='btn btn-default'/></td>
                     </tr>
+                    <tr>
+                        <td>Build Start</td>
+                        <td><input type="text" name="build_start" value="<?php echo $build_start; ?>"></td>
+                        <td><input type="submit" class='btn btn-default'/></td>
+                    </tr>
+                    <tr>
+                        <td>Build End</td>
+                        <td><input type="text" name="build_end" value="<?php echo $build_end; ?>"></td>
+                        <td><input type="submit" class='btn btn-default'/></td>
+                    </tr>
                   </tbody>
                 </form>
               </table>
             </div>
-          Version 0.1.8
+          Version 1.0.1
         </div>
       </div>
     </div>

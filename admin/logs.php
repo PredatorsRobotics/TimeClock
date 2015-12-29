@@ -12,7 +12,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -23,8 +23,9 @@
   	<link rel="stylesheet" href="../css/bootstrap.css" type="text/css" />
 
     <link href="../css/dashboard.css" rel="stylesheet">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
         <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
     $(document).ready(function(){
         $("#pending").click(function(){
@@ -92,7 +93,7 @@
             <h3>Name</h3>
             <form class="form-inline" action="logs.php" method="get"><input type="hidden" name="n" value="name"><input class="form-control" type="text" name="v" placeholder="Name"></input> <input type="submit" class="btn btn-default"></form>
             <h3>Date</h3>
-            <form class="form-inline" action="logs.php" method="get"><input type="hidden" name="n" value="date"><input class="form-control" type="text" name="v" placeholder="Date"></input> <input type="submit" class="btn btn-default"></form>
+            <form class="form-inline" action="logs.php" method="get"><input type="hidden" name="n" value="date"><input class="form-control" type="text" name="v" placeholder="Date"></input> <input type="submit" class="btn btn-default"> <a href="logs.php?n=date&v=<?php echo date('Y-m-d'); ?>" class="btn btn-warning">Veiw Today's Report</a> </form>
             <h3>Status</h3>
             <a class="btn btn-warning" href="logs.php?n=status&v=0">Pending</a> <a class="btn btn-danger" href="logs.php?n=status&v=2">Denied</a> <a class="btn btn-success" href="logs.php?n=status&v=1">Approved</a>
           </div>
@@ -115,27 +116,39 @@
                     switch ($_GET['n']) {
                         case 'date':
                             $value = $_GET['v'];
-                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE DATE(Time_In) = '$value' ORDER BY ID DESC");
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE DATE(Time_In) = '$value' AND Time_Out IS NOT NULL ORDER BY ID DESC");
                             break;
                         case 'name':
                             $value = $_GET['v'];
-                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$value' ORDER BY ID DESC");
+                            $generate = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE Name='$value'");
+                            while($row2 = mysqli_fetch_array($generate)) {
+                              $ID = $row2['ID'];
+                            }
+                          
+                            
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$ID' AND Time_Out IS NOT NULL ORDER BY ID DESC");
                             break;
                         case 'status':
                             $value = $_GET['v'];
-                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE Status='$value' ORDER BY ID DESC");
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE Status='$value' AND Time_Out IS NOT NULL ORDER BY ID DESC");
                             break;
                         case 'id':
                             $value = $_GET['v'];
-                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE ID='$value' ORDER BY ID DESC");
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE ID='$value' AND Time_Out IS NOT NULL ORDER BY ID DESC");
                             break;
                         default:
-                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` ORDER BY ID DESC");
+                            $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE Time_Out IS NOT NULL ORDER BY ID DESC");
                             break;
                     }
                     while($row = mysqli_fetch_array($result)) {
                       $time_in = $row['Time_In'];
                       $time_out = $row['Time_Out'];
+                      
+                      $userID = $row['User'];
+                      $name = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE ID=$userID");
+                      while($namesrow = mysqli_fetch_array($name)) {
+                        $user = $namesrow['Name'];
+                      }
                       
                       switch ($row['Status']) {
                           case 0:
@@ -151,7 +164,7 @@
                       
                       echo "<tr>";
                       echo "<td>" . $row['ID'] . "</td>";
-                      echo "<td>" . $row['User'] . "</td>";
+                      echo "<td>" . $user . "</td>";
                   		echo "<td>" . date('l, F j, Y', strtotime($time_in)) . "</td>";
                       echo "<td>" . date("g:i A", strtotime($time_in)) . "</td>";
                       echo "<td>" . date("g:i A", strtotime($time_out)) . "</td>";

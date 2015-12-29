@@ -100,7 +100,7 @@
 		            
                 while($row = mysqli_fetch_array($result)) {
                     $comp = 0;
-                    $user = $row['Name'];
+                    $user = $row['ID'];
                     $result2 = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE `User`='$user' AND `Time_Out` IS NOT NULL AND Status=1");
                     while($row2 = mysqli_fetch_array($result2)){
                       $time_in = $row2['Time_In'];
@@ -109,12 +109,20 @@
                       $comp = $comp + $total;
                     }
                     $comp = number_format($comp, 1);
-                    if($comp >= $req_comp){
-                      $total_comp = $total_comp + 1;
+                    if($comp >= $req_comp ){
+                      if(strtotime($time_in) >= strtotime($build_start)){
+                        if(strtotime($time_in) <= strtotime($build_end)){
+                          $total_comp = $total_comp + 1;
+                        }
+                      }
                     }
                     
                     if($comp >= $req_letter){
-                      $total_letter = $total_letter + 1;
+                      if(strtotime($time_in) >= strtotime($build_start)){
+                        if(strtotime($time_in) <= strtotime($build_end)){
+                          $total_letter = $total_letter + 1;
+                        }
+                      }
                     }
                 }
                 
@@ -164,8 +172,13 @@
                   $duration = $round_hours;
                   $label = "Hours";
                 }
+                $userID = $row['User'];
+                $name = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE ID=$userID");
+                while($namesrow = mysqli_fetch_array($name)) {
+                  $userNAME = $namesrow['Name'];
+                }
                 echo "<tr>";
-                echo "<td>" . $row['User'] . "</td>";
+                echo "<td>" . $userNAME . "</td>";
                 echo "<td>" . $duration . " " . $label . "</td>";
                 echo "</tr>";
               }
@@ -187,7 +200,7 @@
               </thead>
               <tbody>
               <?php
-              $result = mysqli_query($conn,"SELECT * FROM `$data_table` ORDER BY ID DESC LIMIT 5");
+              $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE Time_Out IS NOT NULL ORDER BY ID DESC LIMIT 5");
 		
                 while($row = mysqli_fetch_array($result)) {
                     $time_in = $row['Time_In'];
@@ -218,7 +231,7 @@
               </tbody>
             </table>
           </div>
-        </div>
+        </div>  
       </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

@@ -58,10 +58,11 @@
             if(empty($_POST['pin'])){
               echo '<div class="alert alert-danger" role="alert">Please Provide a PIN!</div>';
             }else{
-              $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name'");
+              $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name' OR `username`='$name'");
     		
               while($row = mysqli_fetch_array($result)) {
                 $server_pin = $row['pin'];
+                $user_id = $row['ID'];
               }
               
               if($PIN !== $server_pin){
@@ -69,10 +70,10 @@
               }else{
                 
                 if($clock=='in'){
-                  $sql = "INSERT INTO `$data_table` (`User`, `Time_In`) VALUES ('" . $name . "', '" . $time . "')";
+                  $sql = "INSERT INTO `$data_table` (`User`, `Time_In`) VALUES ('" . $user_id . "', '" . $time . "')";
                   $conn->query($sql);
                 }elseif($clock=='out'){
-                  $sql = "UPDATE `$data_table` SET Time_Out='$time' WHERE Time_Out IS NULL AND User='$name'";
+                  $sql = "UPDATE `$data_table` SET Time_Out='$time' WHERE Time_Out IS NULL AND User='$user_id'";
                   $conn->query($sql);
                 }
             
@@ -87,8 +88,8 @@
         <h2 class="form-signin-heading"><?php echo $title; ?></h2>
         <br>
         <input type="text" name="name" id="inputName" class=" form-control form-control-top" placeholder="Username" required autofocus>
-        <input type="tel" name="pin" id="inputPassword" class="form-control" placeholder="PIN" style="-webkit-text-security: disc;" maxlength="4">
-        <input type="datetime" name="date" class="form-control form-control-bottom" placeholder="Clock In: 2015-9-11 14:23:57" required>
+        <input type="tel" name="pin" id="inputPassword" class="form-control" placeholder="PIN" style="-webkit-text-security: disc;" autocomplete="off" autocorrect="off">
+        <input type="datetime" name="date" class="form-control form-control-bottom" placeholder="2015-9-11 14:23:57" required>
         <div id="clockInOut"></div>
       </form>
     </div>

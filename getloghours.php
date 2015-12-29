@@ -61,6 +61,15 @@
 				{
 				    $name = $_POST['name'];
 				    
+				    $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name' OR `username`='$name'");
+      		
+	                while($row = mysqli_fetch_array($result)) {
+	                  $server_pin = $row['pin'];
+	                  $user_id = $row['ID'];
+	                  $name = $row['Name'];
+	                  $username = $row['username'];
+	                }
+				    
 				    echo "<h3>Student Name: <b>" . $name . "</b></h3>"
 				    
 				    ?>
@@ -69,15 +78,19 @@
 					<table border="1" class="table table-bordered">
 						<tr>
 							<th width="100">Day</th>
-							<th width="100">Month</th>
-							<th width="50">Year</th>
 							<th width="75">Check-In</th>
 							<th width="75">Check-Out</th>
 							<th width="100">Total Hours</th>
 						</tr>
 		                <?php
 		                $page_total = 0;
-		                $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE `User` = '$name' AND `Time_Out` IS NOT NULL AND Status=1");
+		                $build_total = 0;
+		                
+		                $build_start_date = strtotime($build_start);
+		                $build_end_date = strtotime($build_end);
+		                
+		                
+		                $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE `User` = '$user_id' AND `Time_Out` IS NOT NULL AND Status=1");
 		
 		                while($row = mysqli_fetch_array($result)) {
 		                 	
@@ -88,29 +101,34 @@
 		                 	$rounded_total = number_format($total, 1);
 		                 	
 		                    echo "<tr>";
-		                    echo "<td>" . date('l', strtotime($time_in)) . "</td>";
-		                    echo "<td>" . date('F j', strtotime($time_in)) . "</td>";
-		                    echo "<td>" . date('Y', strtotime($time_in)) . "</td>";
+		                    echo "<td>" . date('l, F j, Y', strtotime($time_in)) . "</td>";
 		                    echo "<td>" . date("g:i A", strtotime($time_in)) . "</td>";
 		                    echo "<td>" . date("g:i A", strtotime($time_out)) . "</td>";
 		                    echo "<td>" . $rounded_total . "</td>";
 		                    
 		                    $page_total = $page_total + $total;
 		                    
+		                    if(strtotime($time_in) >= $build_start_date){
+                        		if(strtotime($time_in) <= $build_end_date){
+		                    		$build_total = $build_total + $total;
+                        		}
+		                    }
+		                    
 		                }
 		                
 		                $page_total = number_format($page_total, 1);
+		                $build_total = number_format($build_total, 1);
 		                
 		                //RRMAINING
-		                $rem_comp = $req_comp - $page_total;
-		                $rem_letter = $req_letter - $page_total;
+		                $rem_comp = $req_comp - $build_total;
+		                $rem_letter = $req_letter - $build_total;
 		                
 		                //PERCENTAGES
-		                $per_comp1 = $page_total / $req_comp;
+		                $per_comp1 = $build_total / $req_comp;
 						$per_comp2 = $per_comp1 * 100;
 						$per_comp = number_format($per_comp2, 0);
 						
-						$per_letter1 = $page_total / $req_letter;
+						$per_letter1 = $build_total / $req_letter;
 						$per_letter2 = $per_letter1 * 100;
 						$per_letter = number_format($per_letter2, 0);
 						
@@ -119,6 +137,7 @@
 					
 					<br/>
 					<h3>Total Hours: <b><?php echo $page_total; ?></b><br/></h3>
+					<h4>Hours During Build: <b><?php echo $build_total; ?></b><br/></h4>
 					
 					<h5>Hours Required to go to Competition: <b><?php echo $req_comp; ?> Hours</b><br>
 					Your Progress: <?php echo $per_comp . "%"; ?></h5>
@@ -136,7 +155,7 @@
 					  </div>
 					  <center><?php if($per_letter <= 100){echo $rem_letter . " Hours";} ?></center>
 					</div>
-					If there are any errors please contact me!
+					If there are any errors please contact <a href="mailto: villnoweric@gmail.com">Eric!</a>
 					
 			<?php } ?>
 		</div>

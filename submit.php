@@ -11,9 +11,13 @@ switch ($_POST['function']) {
         $value = mysqli_num_rows($user_var);
         if($value==0){
             die("-1");
+        }else{
+            while($row = mysqli_fetch_array($user_var)) {
+             $user_id = $row['ID'];   
+            }
         }
         
-        $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$username' AND Time_Out IS NULL");
+        $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$user_id' AND Time_Out IS NULL");
         $value = mysqli_num_rows($result);
         echo $value;
         break;
@@ -24,9 +28,13 @@ switch ($_POST['function']) {
         $value = mysqli_num_rows($user_var);
         if($value==0){
             die("-1");
-        }
+        }else{
+            while($row = mysqli_fetch_array($user_var)) {
+             $user_id = $row['ID'];   
+            }
+        }   
         
-        $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$username' AND Time_Out IS NULL");
+        $result = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE User='$user_id' AND Time_Out IS NULL");
         $value = mysqli_num_rows($result);
         echo $value;
         break;

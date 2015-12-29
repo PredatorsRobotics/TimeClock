@@ -40,6 +40,10 @@
     <div class="container">
       <form class="form-signin" method="post">
         <h2 class="form-signin-heading"><?php echo $title; ?><br>Leaderboard</h2>
+        <center><div class="btn-group" role="group" aria-label="...">
+          <a href="?" class="btn btn-default <?php if($_GET['t']!=t){echo 'active';} ?>">Competition</a>
+          <a href="?t=t" class="btn btn-default <?php if($_GET['t']==t){echo 'active';} ?>">Total</a>
+        </div></center>
         <br>
         <table class="table">
           <thead>
@@ -53,15 +57,30 @@
               <?php
               $result = mysqli_query($conn,"SELECT * FROM `$user_table` ORDER BY ID ASC");
               $leader = array();
+              
+              $build_start_date = strtotime($build_start);
+		          $build_end_date = strtotime($build_end);
+		                
               while($row = mysqli_fetch_array($result)) {
                     $loop_total = 0;
                     $user = $row['Name'];
-                    $result2 = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE `User`='$user' AND `Time_Out` IS NOT NULL AND Status=1");
+                    $user_id = $row['ID'];
+                    $result2 = mysqli_query($conn,"SELECT * FROM `$data_table` WHERE `User`='$user_id' AND `Time_Out` IS NOT NULL AND Status=1");
                     while($row2 = mysqli_fetch_array($result2)){
                       $time_in = $row2['Time_In'];
 		                 	$time_out = $row2['Time_Out'];
                       $total = ( ( strtotime($time_out) - strtotime($time_in) ) / 60 ) / 60;
-                      $loop_total = $loop_total + $total;
+                      
+                      if($_GET['t']!=t){
+                      if(strtotime($time_in) >= $build_start_date){
+                        if(strtotime($time_in) <= $build_end_date){
+                          $loop_total = $loop_total + $total;
+                        }
+                      }
+                      }else{
+                        $loop_total = $loop_total + $total;
+                      }
+                      
                     }
                     $loop_total = number_format($loop_total, 1);
                     if($loop_total != 0.0){

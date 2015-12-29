@@ -16,11 +16,11 @@
 	    if(empty($_POST['pin'])){
         $error=4;
       }else{
-        $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name' AND pin IS NULL");
+        $result = mysqli_query($conn,"SELECT * FROM `$user_table` ( WHERE Name='$name' OR username='$name' ) AND pin IS NULL");
         $isnull = mysqli_num_rows($result);
               
         if($isnull == 0){
-          $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name'");
+          $result = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name' OR `username`='$name'");
       		
           while($row = mysqli_fetch_array($result)) {
             $server_pin = $row['pin'];
@@ -34,7 +34,7 @@
         }
               
         if($PIN == $server_pin){
-          $resultz = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name' AND admin=1");
+          $resultz = mysqli_query($conn,"SELECT * FROM `$user_table` WHERE `Name`='$name' OR `username`='$name' AND admin=1");
           $isadmin = mysqli_num_rows($resultz);
               
           if($isadmin == 1){
@@ -75,10 +75,12 @@
           </button>
           <a class="navbar-brand" href="../"><?php echo $title; ?></a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+            <li><a href="../">Home</a></li>
+            <li class="active"><a href="login.php">Login</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
     <div class="container">
@@ -103,20 +105,10 @@
         ?>
         <br>
         <input type="text" name="name" id="inputName" class=" form-control form-control-top" placeholder="Username" required autofocus>
-        <input type="tel" name="pin" id="inputPassword" class="form-control form-control-bottom" placeholder="PIN" style="-webkit-text-security: disc;" maxlength="4">
+        <input type="tel" name="pin" id="inputPassword" class="form-control form-control-bottom" placeholder="PIN" style="-webkit-text-security: disc;" maxlength="4" autocomplete="off" autocorrect="off">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
       </form>
     </div>
-    
-    <footer class="footer" style="position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 60px;
-  background-color: #f5f5f5;">
-      <div class="container">
-        <p class="text-muted">&copy; <?php echo date('Y'); ?></p>
-      </div>
-    </footer>
  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
